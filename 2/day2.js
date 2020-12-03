@@ -1,20 +1,25 @@
 const fs = require('fs');
 const path = require('path');
-// read input file
-const input = fs.readFileSync(path.resolve(__dirname, './input.txt'), { encoding: "UTF-8"});
 
-// transform input lines and extract checking parameters in own object keys
-const inputLines = input.split("\n").map(line => {
-  const [key,value] = line.split(':');
-  const [occurance,needle] = key.split(' ');
-  const [start,end] = occurance.split("-");
+function readInput(inputFile="input.txt") {
+  // read input file
+  const file = fs.readFileSync(path.resolve(__dirname, `./${inputFile}`), { encoding: "UTF-8"});
 
-  return {
-    occurance: { start, end },
-    needle,
-    pw: value.trim()
-  }
-});
+  // transform input lines and extract checking parameters in own object keys
+  return file.split("\n").map(line => {
+    const [key,value] = line.split(':');
+    const [occurance,needle] = key.split(' ');
+    const [start,end] = occurance.split("-");
+
+    return {
+      occurance: { start, end },
+      needle,
+      pw: value.trim()
+    }
+  });
+}
+
+const inputLines = readInput();
 
 // part 1 - get valid passwordlist by checking if the needle occurance is in the range
 function getValidPasswordsByRange(list) {
@@ -45,4 +50,8 @@ function getValidPasswordsByPosition(list) {
 const validPasswordsByRange = getValidPasswordsByRange(inputLines)
 const validPasswordsByPosition = getValidPasswordsByPosition(inputLines)
 
-console.log(validPasswordsByRange.length, validPasswordsByPosition.length);
+module.exports = {
+  readInput,
+  getValidPasswordsByRange,
+  getValidPasswordsByPosition
+}

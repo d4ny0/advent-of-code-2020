@@ -1,11 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-// read input file
-const input = fs.readFileSync(path.resolve(__dirname, './input.txt'), { encoding: "UTF-8"});
+function readInput(inputFile="input.txt") {
+  // read input file
+  const file = fs.readFileSync(path.resolve(__dirname, `./${inputFile}`), { encoding: "UTF-8"});
+  // convert lines to array of numbers
+  return file.split("\n").map(x=>Number(x));
+}
 
-// convert lines to array of numbers
-const numbers = input.split("\n").map(x=>Number(x));
+const inputLines = readInput();
+
 
 // step 1 - find  2 numbers that add up to 2020
 function getTwoCorrespondingNumbers(numList, target = 2020) {
@@ -44,14 +48,14 @@ function multiply(numbers) {
   return numbers.reduce((curr,total) => total *= curr);
 }
 
-// helper to sum up given numbers array
-function sum(numbers) {
-  return numbers.reduce((curr,total) => total += curr);
+// results
+const matchTwo = multiply(getTwoCorrespondingNumbers(inputLines));
+const matchThree = multiply(getThreeCorrespondingNumbers(inputLines));
+
+module.exports = {
+  readInput,
+  multiply,
+  getTwoCorrespondingNumbers,
+  getThreeCorrespondingNumbers
 }
 
-// get corresponding numbers and multiply them with each other
-const matchTwo = getTwoCorrespondingNumbers(numbers);
-const matchThree = getThreeCorrespondingNumbers(numbers);
-
-console.log(`These numbers: ${matchTwo.join(', ')} add up to ${sum(matchTwo)} and multiply to ${multiply(matchTwo)}`);
-console.log(`These numbers: ${matchThree.join(', ')} add up to ${sum(matchThree)} and multiply to ${multiply(matchThree)}`);

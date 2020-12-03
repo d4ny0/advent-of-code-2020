@@ -1,19 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 
-// read input file
-const input = fs.readFileSync(path.resolve(__dirname, './input.txt'), { encoding: "UTF-8"});
+function readInput(inputFile="input.txt") {
+  // read input file
+  const file = fs.readFileSync(path.resolve(__dirname, `./${inputFile}`), { encoding: "UTF-8"});
 
-const inputLines = input.split('\n');
+  return file.split('\n');
+}
 
+const inputLines = readInput();
 
 /**
  * step 1
  * take input and move down a given slope (right: 3, down: 1)
  * add all '#' as trees
  */
-
-
 
 function countTrees(input) {
   return input.reduce((totalTrees,currentLine,idx) => {
@@ -23,9 +24,6 @@ function countTrees(input) {
     return currentLine[offset] === '#' ? totalTrees + 1 : totalTrees;
   }, 0);
 }
-
-const treeAmount = countTrees(inputLines);
-console.log(treeAmount);
 
 /**
  * step 2
@@ -59,9 +57,23 @@ function countTreesWithSlopes(input, slope) {
   return trees;
 }
 
-// loop over all slopes and multiply each result
-const multipliedTrees = slopes.reduce((totalTrees,currentSlope) => (
-  totalTrees * countTreesWithSlopes(inputLines, currentSlope)
-),1);
 
-console.log(multipliedTrees);
+
+  // loop over all slopes and multiply each result
+function multiplyTrees(input, slopes) {
+  return slopes.reduce((totalTrees,currentSlope) => (
+    totalTrees * countTreesWithSlopes(input, currentSlope)
+  ),1);
+}
+
+// results
+const treeAmount = countTrees(inputLines);
+const multipliedTrees = multiplyTrees(inputLines, slopes);
+
+module.exports = {
+  readInput,
+  countTrees,
+  countTreesWithSlopes,
+  multiplyTrees,
+  slopes
+}
